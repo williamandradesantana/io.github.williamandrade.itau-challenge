@@ -1,4 +1,4 @@
-package io.github.williamandradesantana.itau_challenge.interfaces.shared.pagination;
+package io.github.williamandradesantana.itau_challenge.domain.shared.pagination;
 
 public record PageQuery(int page, int size) {
     public PageQuery {

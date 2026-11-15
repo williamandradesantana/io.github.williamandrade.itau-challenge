@@ -1,7 +1,7 @@
 package io.github.williamandradesantana.itau_challenge.domain.auth.permission;
 
-import io.github.williamandradesantana.itau_challenge.interfaces.shared.pagination.PageQuery;
-import io.github.williamandradesantana.itau_challenge.interfaces.shared.pagination.PageResult;
+import io.github.williamandradesantana.itau_challenge.domain.shared.pagination.PageQuery;
+import io.github.williamandradesantana.itau_challenge.domain.shared.pagination.PageResult;
 
 import java.util.Optional;
 import java.util.UUID;
