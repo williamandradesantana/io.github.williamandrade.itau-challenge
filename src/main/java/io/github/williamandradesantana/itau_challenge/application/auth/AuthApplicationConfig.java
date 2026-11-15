@@ -37,6 +37,11 @@ public class AuthApplicationConfig {
     }
 
     @Bean
+    public GetAUserByNameUseCase getAUserByName(UserRepository userRepository) {
+        return new GetAUserByNameUseCase(userRepository);
+    }
+
+    @Bean
     public DisableUserUseCase disableUserUseCase(UserRepository userRepository) {
         return new DisableUserUseCase(userRepository);
     }
