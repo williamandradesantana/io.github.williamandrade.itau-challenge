@@ -2,19 +2,22 @@ package io.github.williamandradesantana.itau_challenge.application.auth.usecases
 
 import io.github.williamandradesantana.itau_challenge.application.auth.IPasswordHasher;
 import io.github.williamandradesantana.itau_challenge.application.auth.dtos.RegisterUserCommand;
+import io.github.williamandradesantana.itau_challenge.application.shared.exceptions.RequiredObjectIsNullException;
 import io.github.williamandradesantana.itau_challenge.domain.auth.permission.Permission;
 import io.github.williamandradesantana.itau_challenge.domain.auth.permission.PermissionRepository;
 import io.github.williamandradesantana.itau_challenge.domain.auth.user.PasswordPolicy;
 import io.github.williamandradesantana.itau_challenge.domain.auth.user.User;
 import io.github.williamandradesantana.itau_challenge.domain.auth.user.UserRepository;
 import io.github.williamandradesantana.itau_challenge.domain.auth.user.exceptions.UserNameAlreadyExistsException;
-import io.github.williamandradesantana.itau_challenge.application.shared.exceptions.RequiredObjectIsNullException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
 public class RegisterUserUseCase {
 
+    private static final Logger log = LoggerFactory.getLogger(RegisterUserUseCase.class);
     private static final String DEFAULT_PERMISSION = "COMMON";
 
     private final UserRepository userRepository;
@@ -30,6 +33,8 @@ public class RegisterUserUseCase {
     @Transactional
     public void execute(RegisterUserCommand command) {
         if (command == null) throw new RequiredObjectIsNullException();
+
+        log.info("Register a user with userName: {}", command.userName());
 
         PasswordPolicy.validate(command.password());
 
