@@ -3,16 +3,19 @@ package io.github.williamandradesantana.itau_challenge.application.auth.usecases
 import io.github.williamandradesantana.itau_challenge.application.auth.IPasswordHasher;
 import io.github.williamandradesantana.itau_challenge.application.auth.dtos.RegisterUserCommand;
 import io.github.williamandradesantana.itau_challenge.domain.auth.permission.Permission;
-import io.github.williamandradesantana.itau_challenge.domain.auth.permission.PermissionName;
 import io.github.williamandradesantana.itau_challenge.domain.auth.permission.PermissionRepository;
+import io.github.williamandradesantana.itau_challenge.domain.auth.user.PasswordPolicy;
 import io.github.williamandradesantana.itau_challenge.domain.auth.user.User;
 import io.github.williamandradesantana.itau_challenge.domain.auth.user.UserRepository;
 import io.github.williamandradesantana.itau_challenge.domain.auth.user.exceptions.UserNameAlreadyExistsException;
-import io.github.williamandradesantana.itau_challenge.interfaces.shared.exceptions.RequiredObjectIsNullException;
+import io.github.williamandradesantana.itau_challenge.application.shared.exceptions.RequiredObjectIsNullException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
 public class RegisterUserUseCase {
+
+    private static final String DEFAULT_PERMISSION = "COMMON";
 
     private final UserRepository userRepository;
     private final PermissionRepository permissionRepository;
@@ -24,18 +27,25 @@ public class RegisterUserUseCase {
         this.passwordHasher = passwordHasher;
     }
 
+    @Transactional
     public void execute(RegisterUserCommand command) {
         if (command == null) throw new RequiredObjectIsNullException();
 
-        userRepository.findByUserName(command.userName()).ifPresent((existing) -> {
-            throw new UserNameAlreadyExistsException("UserName already exists: " + command.userName());
+        PasswordPolicy.validate(command.password());
+
+        Permission defaultPermission = permissionRepository.findByPermissionName(DEFAULT_PERMISSION)
+                .orElseThrow(() -> new IllegalStateException("Default permission not seeded: " + DEFAULT_PERMISSION));
+
+        User user = User.create(
+            command.userName(),
+            command.fullName(),
+            passwordHasher.hash(command.password()),
+            Set.of(defaultPermission)
+        );
+
+        userRepository.findByUserName(user.getUserName()).ifPresent(existing -> {
+            throw new UserNameAlreadyExistsException("UserName already exists: " + user.getUserName());
         });
-
-        Permission defaultPermission = permissionRepository.findByPermissionName("COMMON")
-                .orElseThrow(() -> new IllegalStateException("Default permission not seeded: COMMON"));
-
-        String encodedPassword = passwordHasher.hash(command.password());
-        User user = User.create(command.userName(), command.fullName(), encodedPassword, Set.of(defaultPermission));
 
         userRepository.save(user);
     }
