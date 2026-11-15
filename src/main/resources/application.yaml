@@ -21,7 +21,7 @@ spring:
       enabled: always
 
   main:
-    banner: off
+    banner-mode: off
 
 app:
   cors:
