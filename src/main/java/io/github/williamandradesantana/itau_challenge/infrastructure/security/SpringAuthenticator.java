@@ -34,6 +34,7 @@ public class SpringAuthenticator implements IAuthenticator {
 
             Set<String> roles = authentication.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
+                    .filter(authority -> !authority.startsWith("FACTOR_"))
                     .collect(Collectors.toSet());
 
             return new AuthenticatedUser(authentication.getName(), roles);
