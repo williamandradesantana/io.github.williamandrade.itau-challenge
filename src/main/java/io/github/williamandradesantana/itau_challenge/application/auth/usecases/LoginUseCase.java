@@ -2,6 +2,7 @@ package io.github.williamandradesantana.itau_challenge.application.auth.usecases
 
 import io.github.williamandradesantana.itau_challenge.application.auth.IAuthenticator;
 import io.github.williamandradesantana.itau_challenge.application.auth.ITokenService;
+import io.github.williamandradesantana.itau_challenge.application.auth.dtos.AuthTokens;
 import io.github.williamandradesantana.itau_challenge.application.auth.dtos.AuthenticatedUser;
 import io.github.williamandradesantana.itau_challenge.application.auth.dtos.LoginCommand;
 import io.github.williamandradesantana.itau_challenge.application.shared.exceptions.RequiredObjectIsNullException;
@@ -20,11 +21,11 @@ public class LoginUseCase {
         this.tokenService = tokenService;
     }
 
-    public String execute(LoginCommand command) {
+    public AuthTokens execute(LoginCommand command) {
         if (command == null) throw new RequiredObjectIsNullException();
 
         log.info("Attempting login for user: {}", command.userName());
         AuthenticatedUser user = authenticator.authenticate(command.userName(), command.password());
-        return tokenService.generateToken(user.userName(), user.roles());
+        return tokenService.generateTokens(user.userName(), user.roles());
     }
 }

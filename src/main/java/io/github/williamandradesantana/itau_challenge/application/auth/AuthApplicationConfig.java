@@ -18,6 +18,14 @@ public class AuthApplicationConfig {
     }
 
     @Bean
+    public RefreshTokenUseCase refreshTokenUseCase(
+        UserRepository userRepository,
+        ITokenService tokenService
+    ) {
+        return new RefreshTokenUseCase(userRepository, tokenService);
+    }
+
+    @Bean
     public RegisterUserUseCase registerUserUseCase(
         UserRepository userRepository,
         PermissionRepository permissionRepository,
