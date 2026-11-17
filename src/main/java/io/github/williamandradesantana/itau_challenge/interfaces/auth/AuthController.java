@@ -1,11 +1,11 @@
 package io.github.williamandradesantana.itau_challenge.interfaces.auth;
 
-import io.github.williamandradesantana.itau_challenge.application.auth.dtos.LoginCommand;
-import io.github.williamandradesantana.itau_challenge.application.auth.dtos.RegisterUserCommand;
-import io.github.williamandradesantana.itau_challenge.application.auth.dtos.UserResult;
+import io.github.williamandradesantana.itau_challenge.application.auth.dtos.*;
 import io.github.williamandradesantana.itau_challenge.application.auth.usecases.LoginUseCase;
+import io.github.williamandradesantana.itau_challenge.application.auth.usecases.RefreshTokenUseCase;
 import io.github.williamandradesantana.itau_challenge.application.auth.usecases.RegisterUserUseCase;
 import io.github.williamandradesantana.itau_challenge.interfaces.auth.dtos.LoginRequest;
+import io.github.williamandradesantana.itau_challenge.interfaces.auth.dtos.RefreshRequest;
 import io.github.williamandradesantana.itau_challenge.interfaces.auth.dtos.RegisterUserRequest;
 import io.github.williamandradesantana.itau_challenge.interfaces.auth.dtos.TokenResponse;
 import jakarta.validation.Valid;
@@ -23,10 +23,12 @@ public class AuthController {
 
     private final RegisterUserUseCase registerUserUseCase;
     private final LoginUseCase loginUseCase;
+    private final RefreshTokenUseCase refreshTokenUseCase;
 
-    public AuthController(RegisterUserUseCase registerUserUseCase, LoginUseCase loginUseCase) {
+    public AuthController(RegisterUserUseCase registerUserUseCase, LoginUseCase loginUseCase, RefreshTokenUseCase refreshTokenUseCase) {
         this.registerUserUseCase = registerUserUseCase;
         this.loginUseCase = loginUseCase;
+        this.refreshTokenUseCase = refreshTokenUseCase;
     }
 
     @PostMapping(
@@ -36,12 +38,23 @@ public class AuthController {
     )
     public ResponseEntity<TokenResponse> login(@RequestBody @Valid LoginRequest request) {
         LoginCommand command = new LoginCommand(request.userName(), request.password());
-        String token = loginUseCase.execute(command);
-        return ResponseEntity.ok(TokenResponse.bearer(token));
+        AuthTokens token = loginUseCase.execute(command);
+        return ResponseEntity.ok(TokenResponse.from(token));
+    }
+
+    @PostMapping(
+        value = "/refresh",
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<TokenResponse> refresh(@RequestBody @Valid RefreshRequest request) {
+        RefreshTokenCommand command = new RefreshTokenCommand(request.refreshToken());
+        AuthTokens token = refreshTokenUseCase.execute(command);
+        return ResponseEntity.ok(TokenResponse.from(token));
     }
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserResult> register(@RequestBody @Valid RegisterUserRequest request) {
+    public ResponseEntity<Void> register(@RequestBody @Valid RegisterUserRequest request) {
 
         RegisterUserCommand command =
                 new RegisterUserCommand(request.userName(), request.fullName(), request.password());

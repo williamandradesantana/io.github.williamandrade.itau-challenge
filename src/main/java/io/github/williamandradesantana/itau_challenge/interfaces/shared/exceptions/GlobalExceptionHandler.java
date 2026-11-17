@@ -1,6 +1,7 @@
 package io.github.williamandradesantana.itau_challenge.interfaces.shared.exceptions;
 
 import io.github.williamandradesantana.itau_challenge.application.auth.exceptions.InvalidCredentialsException;
+import io.github.williamandradesantana.itau_challenge.application.auth.exceptions.InvalidRefreshTokenException;
 import io.github.williamandradesantana.itau_challenge.application.shared.exceptions.RequiredObjectIsNullException;
 import io.github.williamandradesantana.itau_challenge.application.shared.exceptions.ResourceNotFoundException;
 import io.github.williamandradesantana.itau_challenge.domain.auth.user.exceptions.UserNameAlreadyExistsException;
@@ -58,6 +59,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<ExceptionResponse> handleInvalidCredentials(InvalidCredentialsException ex, WebRequest request) {
+        return build(HttpStatus.UNAUTHORIZED, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(InvalidRefreshTokenException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidRefreshToken(InvalidRefreshTokenException ex, WebRequest request) {
         return build(HttpStatus.UNAUTHORIZED, ex.getMessage(), request);
     }
 
