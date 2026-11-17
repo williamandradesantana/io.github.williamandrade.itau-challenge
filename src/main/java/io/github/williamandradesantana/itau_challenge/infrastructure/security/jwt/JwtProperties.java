@@ -3,5 +3,5 @@ package io.github.williamandradesantana.itau_challenge.infrastructure.security.j
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "security.jwt")
-public record JwtProperties(String secret, long expirationInSeconds) {
+public record JwtProperties(String secret, long expirationInSeconds, long refreshExpirationInSeconds) {
 }
