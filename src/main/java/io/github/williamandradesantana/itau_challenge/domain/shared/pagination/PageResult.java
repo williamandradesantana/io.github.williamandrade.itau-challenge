@@ -5,6 +5,9 @@ import java.util.function.Function;
 
 public record PageResult<T>(List<T> content, int page, int size, long totalElements) {
     public PageResult {
+        if (page < 0 || size <= 0 || totalElements < 0) {
+            throw new IllegalArgumentException("Invalid pagination parameters");
+        }
         content = List.copyOf(content);
     }
 
