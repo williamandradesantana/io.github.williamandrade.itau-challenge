@@ -13,6 +13,7 @@ jobs:
 
     env:
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      JWT_SECRET_TEST: ${{ secrets.JWT_SECRET_TEST }}
 
     steps:
       - name: Checkout
