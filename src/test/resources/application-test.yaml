@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST_TEST}:${POSTGRES_PORT_TEST}/${POSTGRES_DB_TEST}
+    username: ${POSTGRES_USER_TEST}
+    password: ${POSTGRES_PASSWORD_TEST}
+
+app:
+  cors:
+    allowed-origins: http://localhost:3000
+
+security:
+  jwt:
+    secret: CBCPrhHvJfKCOxLN/TpcaL8RTU3RI6F4Uy4cfzbF/zM=
+    expiration-in-seconds: 3600
+    refresh-expiration-in-seconds: 604800
