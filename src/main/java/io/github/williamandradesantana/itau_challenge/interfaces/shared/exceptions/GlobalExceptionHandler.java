@@ -6,6 +6,8 @@ import io.github.williamandradesantana.itau_challenge.application.shared.excepti
 import io.github.williamandradesantana.itau_challenge.application.shared.exceptions.ResourceNotFoundException;
 import io.github.williamandradesantana.itau_challenge.domain.auth.user.exceptions.UserNameAlreadyExistsException;
 import io.github.williamandradesantana.itau_challenge.domain.shared.exceptions.DomainException;
+import io.github.williamandradesantana.itau_challenge.domain.transaction.exceptions.InvalidTransactionAmountException;
+import io.github.williamandradesantana.itau_challenge.domain.transaction.exceptions.InvalidTransactionDateTimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -82,6 +84,15 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.CONFLICT, ex.getMessage(), request);
     }
 
+    @ExceptionHandler(InvalidTransactionDateTimeException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidTransactionDateTime(InvalidTransactionDateTimeException ex, WebRequest request) {
+        return build(HttpStatus.CONFLICT, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(InvalidTransactionAmountException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidTransactionAmount(InvalidTransactionAmountException ex, WebRequest request) {
+        return build(HttpStatus.CONFLICT, ex.getMessage(), request);
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleAll(Exception ex, WebRequest request) {
