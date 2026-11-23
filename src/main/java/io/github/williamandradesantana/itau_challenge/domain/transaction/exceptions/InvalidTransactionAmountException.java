@@ -4,6 +4,6 @@ import io.github.williamandradesantana.itau_challenge.domain.shared.exceptions.D
 
 public class InvalidTransactionAmountException extends DomainException {
     public InvalidTransactionAmountException() {
-        super("The value cannot be less than zero");
+        super("The value cannot be less than zero or null");
     }
 }
