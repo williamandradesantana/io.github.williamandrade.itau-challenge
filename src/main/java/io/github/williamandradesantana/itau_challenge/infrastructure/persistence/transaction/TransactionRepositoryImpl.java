@@ -22,7 +22,6 @@ public class TransactionRepositoryImpl implements TransactionRepository {
     public TransactionStatistics calculateStatisticsSince(OffsetDateTime startDateTime) {
         TransactionStatisticsProjection stats = jpaRepository.calculateStatisticsSince(startDateTime);
         return new TransactionStatistics(stats.getCount(), stats.getSum(), stats.getAvg(), stats.getMin(), stats.getMax());
-
     }
 
     @Override
